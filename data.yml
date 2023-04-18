@@ -1,0 +1,162 @@
+backends:
+  - name: phpmain
+    type: php
+    connection: unix
+    path: /run/php/php-fpm.sock
+error-files:
+  - name: back_to_homepage
+    code: 404
+    file: 404.html
+    root: /var/www/error/
+
+hosts:
+  - name: Website Main
+    domain: philippwasser.de
+    cert: philippwasser.de
+    root: /home/website/website/public/
+    use:
+      - https
+      - www
+      - legacy_warn
+      - well-known
+      - hsts
+      - redirect_https
+    custom_error:
+      - back_to_homepage
+
+  - name: IP tools both
+    domain: ip.tools.pwserv.net
+    cert: tools.pwserv.net
+    raw: |
+      location / {
+      return 200 $remote_addr;
+      add_header Content-Type text/plain;
+      }
+    use:
+      - https
+      - well-known
+
+  - name: IP tools v6
+    domain: v6.tools.pwserv.net
+    cert: tools.pwserv.net
+    raw: |
+      location / {
+      return 200 $remote_addr;
+      add_header Content-Type text/plain;
+      }
+    use:
+      - https
+      - well-known
+
+  - name: IP tools v4
+    domain: v4.tools.pwserv.net
+    cert: tools.pwserv.net
+    raw: |
+      location / {
+      return 200 $remote_addr;
+      add_header Content-Type text/plain;
+      }
+    use:
+      - https
+      - well-known
+
+  - name: IP tools IPv4
+    domain: ipv4.tools.pwserv.net
+    cert: tools.pwserv.net
+    raw: |
+      location / {
+      return 200 $remote_addr;
+      add_header Content-Type text/plain;
+      }
+    use:
+      - https
+      - well-known
+
+  - name: IP tools IPv6
+    domain: ipv6.tools.pwserv.net
+    cert: tools.pwserv.net
+    raw: |
+      return 200 $remote_addr;
+      add_header Content-Type text/plain;
+    use:
+      - https
+      - well-known
+
+  - name: RSP Touren
+    domain: rsptouren.de
+    cert: rsptouren.de
+    root: /var/www/rsptouren
+    use:
+      - https
+      - www
+      - well-known
+      - hsts
+      - redirect_https
+    custom_error:
+      - back_to_homepage
+
+  - name: RSP Touren Map
+    domain: map.rsptouren.de
+    cert: rsptouren.de
+    root: /home/website/openlernplatzmap/
+    use:
+      - https
+      - well-known
+      - hsts
+      - redirect_https
+    custom_error:
+      - back_to_homepage
+
+  - name: Tools
+    domain: tools.pwserv.net
+    cert: tools.pwserv.net
+    root: /var/www/tools/
+    use:
+      - https
+      - well-known
+      - redirect_https
+    backend: phpmain
+    custom_error:
+      - back_to_homepage
+
+  - name: Oeffi.App
+    domain: oeffi.app
+    cert: oeffi.app
+    root: /home/website/oeffi/
+    use:
+      - https
+      - well-known
+      - hsts
+      - redirect_https
+      - www
+    custom_error:
+      - back_to_homepage
+
+  - name: Speedtest
+    domain: speed.tools.pwserv.net
+    cert: tools.pwserv.net
+    root: /var/www/speed/
+    use:
+      - https
+      - well-known
+    backend: phpmain
+    custom_error:
+      - back_to_homepage
+
+  - name: Ja zur Elektrifizierung
+    domain: ja-zur-elektrifizierung.de
+    cert: ja-zur-elektrifizierung.de
+    root: /home/website/elektrik/public/
+    use:
+      - https
+      - www
+      - well-known
+      - hsts
+      - redirect_https
+    custom_error:
+      - back_to_homepage
+
+  - name: Pwserv.net redirct
+    domain: pwserv.net
+    raw: |
+      return 301 https://www.philippwasser.de$request_uri;

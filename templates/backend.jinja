@@ -1,0 +1,6 @@
+
+    upstream {{backend.name}} {
+        {% if backend.type == 'php' %}
+        server {{backend.connection}}:{{backend.path}};
+        {% endif %}
+    }
