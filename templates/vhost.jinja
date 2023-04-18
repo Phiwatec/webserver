@@ -44,8 +44,8 @@ server {
         {% endif -%}
         {% if not host.raw -%}
         {% for errorpage in host.custom_error  -%}
-        error_page {{errorpage.code}} {{errorpage.file}};
-        location = {{errorpage.file}} {
+        error_page {{errorpage.code}} /{{errorpage.file}};
+        location = /{{errorpage.file}} {
                 root {{errorpage.root}};
                 internal;
         }
