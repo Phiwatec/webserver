@@ -36,8 +36,13 @@ server {
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
         
         {% endif -%}
-
-
+	{% if 'legacy_warn' in host.use%}
+                # Legacy banner
+                include /etc/nginx/snippets/legacy-banner.conf;
+                include /etc/nginx/snippets/legacy-js.conf;
+                {%endif%}
+	
+	
         server_name {{host.domain}};
         {%if host.root -%}
         root {{host.root}};
@@ -63,6 +68,7 @@ server {
                 {% if 'legacy_warn' in host.use%}
                 # Legacy banner
                 include /etc/nginx/snippets/legacy-banner.conf;
+		
                 if ($ipv4 ~ "^$") {
                         set $legacy "</body>"; # Do not modify, IPv6 is used
                 }
