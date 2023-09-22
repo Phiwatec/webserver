@@ -10,7 +10,7 @@ server {
         
         {% if host.raw%}
         {{host.raw |indent(8) }}
-        {%endif -%}
+        {% else %}
         {% if 'well-known' in host.use %}
         location ^~ /.well-known/ {
                         alias /var/www/well-known/;
@@ -20,6 +20,25 @@ server {
         {%endif%}
         {% if 'redirect_https' in host.use -%}
         return 301 https://$host$request_uri;
+        {% else %}
+	location / {
+                {% if 'autoindex' in host.use %}
+                autoindex on;
+                {%endif%}
+                try_files $uri $uri/ =404;
+                {% if 'legacy_warn' in host.use%}
+                # Legacy banner
+                include /etc/nginx/snippets/legacy-banner.conf;
+
+                if ($ipv4 ~ "^$") {
+                        set $legacy "</body>"; # Do not modify, IPv6 is used
+                }
+                sub_filter "script-src" "script-src 'unsafe-inline'";
+                sub_filter "</body>" $legacy;
+                {%endif%}
+        }
+
+        {%endif -%}
         {%endif -%}
 }
 
@@ -64,7 +83,10 @@ server {
         }
         {%endif%}
         location / {
-                try_files $uri $uri/ =404;
+                {% if 'autoindex' in host.use %}
+		autoindex on;
+		{%endif%}
+		try_files $uri $uri/ =404;
                 {% if 'legacy_warn' in host.use%}
                 # Legacy banner
                 include /etc/nginx/snippets/legacy-banner.conf;

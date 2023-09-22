@@ -24,12 +24,30 @@ hosts:
     custom_error:
       - back_to_homepage
 
+  - name: Stats website
+    domain: stats.philippwasser.de
+    cert: philippwasser.de
+    raw: |
+      access_log  off;
+      location / {
+      proxy_pass http://localhost:5000/;
+
+       }
+    use:
+     - https
+     - well-known
+     - hsts
+     - redirect_https
+    custom_error:
+     - back_to_homepage
+
   - name: IP tools both
     domain: ip.tools.pwserv.net
     cert: tools.pwserv.net
     raw: |
+      access_log  off;
       location / {
-      return 200 $remote_addr;
+      return 200 "$remote_addr\n";
       add_header Content-Type text/plain;
       }
     use:
@@ -40,8 +58,9 @@ hosts:
     domain: v6.tools.pwserv.net
     cert: tools.pwserv.net
     raw: |
+      access_log  off;
       location / {
-      return 200 $remote_addr;
+      return 200 "$remote_addr\n";
       add_header Content-Type text/plain;
       }
     use:
@@ -52,8 +71,9 @@ hosts:
     domain: v4.tools.pwserv.net
     cert: tools.pwserv.net
     raw: |
+      access_log  off;
       location / {
-      return 200 $remote_addr;
+      return 200 "$remote_addr\n";
       add_header Content-Type text/plain;
       }
     use:
@@ -64,8 +84,9 @@ hosts:
     domain: ipv4.tools.pwserv.net
     cert: tools.pwserv.net
     raw: |
+      access_log  off;
       location / {
-      return 200 $remote_addr;
+      return 200 "$remote_addr\n";
       add_header Content-Type text/plain;
       }
     use:
@@ -76,7 +97,8 @@ hosts:
     domain: ipv6.tools.pwserv.net
     cert: tools.pwserv.net
     raw: |
-      return 200 $remote_addr;
+      access_log  off;
+      return 200 "$remote_addr\n";
       add_header Content-Type text/plain;
     use:
       - https
@@ -107,6 +129,30 @@ hosts:
     custom_error:
       - back_to_homepage
 
+  - name: Benchmarket.app
+    domain: benchmarket.app
+    cert: benchmarket.app
+    root: /home/website/openlernplatzmap/
+    use:
+      - https
+      - www
+      - well-known
+      - hsts
+      - redirect_https
+    custom_error:
+      - back_to_homepage
+
+  - name: RSP Touren Map
+    domain: benchmarket.rsptouren.de
+    cert: rsptouren.de
+    root: /home/website/openlernplatzmap/
+    use:
+      - https
+      - well-known
+      - hsts
+      - redirect_https
+    custom_error:
+      - back_to_homepage
   - name: Tools
     domain: tools.pwserv.net
     cert: tools.pwserv.net
@@ -160,3 +206,12 @@ hosts:
     domain: pwserv.net
     raw: |
       return 301 https://www.philippwasser.de$request_uri;
+
+  - name: Repo
+    domain: repo.philippwasser.de
+    cert: philippwasser.de
+    root: /var/www/repo/
+    use:
+      - https
+      - well-known
+      - autoindex
